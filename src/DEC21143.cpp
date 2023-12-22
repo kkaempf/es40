@@ -339,7 +339,7 @@ void CDEC21143::init()
     if((fp = pcap_open_live(cfg, 65536 /*snaplen: capture entire packets */,
        1 /*promiscuous */, 1 /*read timeout: 1ms. */, errbuf)) == NULL) // connect to pcap...
 #endif
-      FAILURE_1(Runtime, "Error opening adapter %s", cfg);
+      FAILURE_2(Runtime, "Error opening adapter %s: %s", cfg, errbuf);
 
   // set default mac = Digital ethernet prefix: 08-00-2B + hexified "ES40" + nic number
   state.mac[0] = 0x08;
