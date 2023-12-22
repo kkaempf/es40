@@ -187,6 +187,7 @@ u64 CDMA::ReadMem(int index, u64 address, int dsize)
 #endif
     return data;
   }
+  return 0;
 }
 
 void CDMA::WriteMem(int index, u64 address, int dsize, u64 data)
