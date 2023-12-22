@@ -57,6 +57,7 @@
  * \author Camiel Vanderhoeven (camiel@camicom.com / http://www.camicom.com)
  **/
 #include <stdarg.h>
+#include <stdio.h>
 
 #if !defined(INCLUDED_DEBUG_H)
 #define INCLUDED_DEBUG_H
