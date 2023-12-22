@@ -110,14 +110,14 @@ CFloppyController::~CFloppyController()
 { }
 
 
-char *datarate_name[] = {"500 Kb/S MFM", "300 Kb/S MFM", "250 Kb/S MFM", 
+const char *datarate_name[] = {"500 Kb/S MFM", "300 Kb/S MFM", "250 Kb/S MFM", 
 			 "1 Mb/S MFM"};
 
 struct cmdinfo_t {
   u8 command;
   u8 parms;
   u8 returns;
-  char * name; } 
+  const char * name; } 
   cmdinfo[] = {
     { 0, 0, 0, NULL},
     { 0, 0, 0, NULL},

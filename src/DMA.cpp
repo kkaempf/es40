@@ -109,7 +109,7 @@ int CDMA::DoClock()
   return 0;
 }
 
-char *dma_index_names[]={"DMA0_IO_MAIN",
+const char *dma_index_names[]={"DMA0_IO_MAIN",
 			 "DMA1_IO_MAIN",
 			 "DMA_IO_LPAGE",
 			 "DMA_IO_HPAGE",
