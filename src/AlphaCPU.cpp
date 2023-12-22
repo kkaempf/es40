@@ -1345,7 +1345,7 @@ void CAlphaCPU::listing(u64 from, u64 to)
  **/
 void CAlphaCPU::listing(u64 from, u64 to, u64 mark)
 {
-  printf("%%CPU-I-LISTNG: Listing from %016"LL "x to %016"LL "x\n", from, to);
+  printf("%%CPU-I-LISTNG: Listing from %016" LL "x to %016" LL "x\n", from, to);
 
   u64   iSavedPC;
   bool  bSavedDebug;
@@ -1562,7 +1562,7 @@ int CAlphaCPU::virt2phys(u64 virt, u64* phys, int flags, bool* asm_bit, u32 ins)
 #if defined(IDB)
     if(bTB_Debug)
 #endif
-      printf("TB %"LL "x,%x: ", virt, flags);
+      printf("TB %" LL "x,%x: ", virt, flags);
 #endif
 
   // try superpage first.
@@ -1867,7 +1867,7 @@ int CAlphaCPU::virt2phys(u64 virt, u64* phys, int flags, bool* asm_bit, u32 ins)
 #if defined(IDB)
     if(bTB_Debug)
 #endif
-      printf("phys: %"LL "x - OK\n", *phys);
+      printf("phys: %" LL "x - OK\n", *phys);
 #endif
   return 0;
 }
@@ -1968,10 +1968,10 @@ void CAlphaCPU::add_tb(u64 virt, u64 pte_phys, u64 pte_flags, int flags)
 #endif
   {
     printf("Add TB---------------------------------------\n");
-    printf("Map VIRT    %016"LL "x\n", state.tb[i].virt);
-    printf("Matching    %016"LL "x\n", state.tb[i].match_mask);
-    printf("And keeping %016"LL "x\n", state.tb[i].keep_mask);
-    printf("To PHYS     %016"LL "x\n", state.tb[i].phys);
+    printf("Map VIRT    %016" LL "x\n", state.tb[i].virt);
+    printf("Matching    %016" LL "x\n", state.tb[i].match_mask);
+    printf("And keeping %016" LL "x\n", state.tb[i].keep_mask);
+    printf("To PHYS     %016" LL "x\n", state.tb[i].phys);
     printf("Read : %c%c%c%c %c\n", state.tb[i].access[0][0] ? 'K' : '-',
            state.tb[i].access[0][1] ? 'E' : '-',
            state.tb[i].access[0][2] ? 'S' : '-',

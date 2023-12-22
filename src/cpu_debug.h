@@ -185,7 +185,7 @@ void          handle_debug_string(char* s);
   {                                                                                   \
     if(bListing && !strcmp(funcname, ""))                                             \
     {                                                                                 \
-      printf("%08"LL "x: \"%s\"\n", state.current_pc,                                 \
+      printf("%08" LL "x: \"%s\"\n", state.current_pc,                                 \
              cSystem->PtrToMem(state.current_pc));                                    \
       state.pc =                                                                      \
         (                                                                             \
@@ -207,13 +207,13 @@ void          handle_debug_string(char* s);
     {                                                                                 \
       u64 xx_upto;                                                                    \
       int xx_result;                                                                  \
-      xx_result = sscanf(&(funcname[6]), "%"LL "x", &xx_upto);                        \
+      xx_result = sscanf(&(funcname[6]), "%" LL "x", &xx_upto);                        \
       if(xx_result == 1)                                                              \
       {                                                                               \
         state.pc = state.current_pc;                                                  \
         while(state.pc < xx_upto)                                                     \
         {                                                                             \
-          printf("%08"LL "x: \"%s\"\n", state.pc, cSystem->PtrToMem(state.pc));       \
+          printf("%08" LL "x: \"%s\"\n", state.pc, cSystem->PtrToMem(state.pc));       \
           state.pc += strlen(cSystem->PtrToMem(state.pc));                            \
           while(state.pc < xx_upto && cSystem->ReadMem(state.pc, 8, this) == 0)       \
             state.pc++;                                                               \
@@ -227,7 +227,7 @@ void          handle_debug_string(char* s);
       int   stringlen;                                                                \
       u64   xx_upto;                                                                  \
       int   xx_result;                                                                \
-      xx_result = sscanf(&(funcname[7]), "%"LL "x", &xx_upto);                        \
+      xx_result = sscanf(&(funcname[7]), "%" LL "x", &xx_upto);                        \
       if(xx_result == 1)                                                              \
       {                                                                               \
         state.pc = state.current_pc;                                                  \
@@ -236,7 +236,7 @@ void          handle_debug_string(char* s);
           stringlen = (int) cSystem->ReadMem(state.pc++, 8, this);                    \
           memset(stringval, 0, 300);                                                  \
           strncpy(stringval, cSystem->PtrToMem(state.pc), stringlen);                 \
-          printf("%08"LL "x: \"%s\"\n", state.pc - 1, stringval);                     \
+          printf("%08" LL "x: \"%s\"\n", state.pc - 1, stringval);                     \
           state.pc += stringlen;                                                      \
           while(state.pc < xx_upto && cSystem->ReadMem(state.pc, 8, this) == 0)       \
             state.pc++;                                                               \
@@ -254,7 +254,7 @@ void          handle_debug_string(char* s);
       || !trc->get_fnc_name(this, state.pc, &funcname)                                \
       )                                                                               \
       {                                                                               \
-        printf("%08"LL "x: %016"LL "x\n", state.pc,                                   \
+        printf("%08" LL "x: %016" LL "x\n", state.pc,                                   \
                cSystem->ReadMem(state.pc, 64, this));                                 \
         state.pc += 8;                                                                \
       }                                                                               \
@@ -270,7 +270,7 @@ void          handle_debug_string(char* s);
       || !trc->get_fnc_name(this, state.pc, &funcname)                                \
       )                                                                               \
       {                                                                               \
-        printf("%08"LL "x: %08"LL "x\n", state.pc,                                    \
+        printf("%08" LL "x: %08" LL "x\n", state.pc,                                    \
                cSystem->ReadMem(state.pc, 32, this));                                 \
         state.pc += 4;                                                                \
       }                                                                               \
@@ -287,10 +287,10 @@ void          handle_debug_string(char* s);
       dbg_strptr += strlen(dbg_strptr);                                               \
     }                                                                                 \
   }                                                                                   \
-  sprintf(dbg_strptr, bListing ? "%08"LL "x: " : "%016"LL "x", state.current_pc);     \
+  sprintf(dbg_strptr, bListing ? "%08" LL "x: " : "%016" LL "x", state.current_pc);     \
   dbg_strptr += strlen(dbg_strptr);                                                   \
   if(!bListing)                                                                       \
-    sprintf(dbg_strptr, "(%08"LL "x): ", current_pc_physical);                        \
+    sprintf(dbg_strptr, "(%08" LL "x): ", current_pc_physical);                        \
   else                                                                                \
   {                                                                                   \
     sprintf(dbg_strptr, "%08x %c%c%c%c: ", ins, printable((char) (ins)),              \
@@ -322,7 +322,7 @@ void          handle_debug_string(char* s);
   {                                           \
     if(!bListing)                             \
     {                                         \
-      sprintf(dbg_strptr, " ==> %"LL "x", a); \
+      sprintf(dbg_strptr, " ==> %" LL "x", a); \
       dbg_strptr += strlen(dbg_strptr);       \
     }                                         \
   }
@@ -349,7 +349,7 @@ void          handle_debug_string(char* s);
     if(trc->get_fnc_name(this, dbg_x, &funcname))                        \
       sprintf(dbg_strptr, "%s", funcname);                               \
     else                                                                 \
-      sprintf(dbg_strptr, "%"LL "x", dbg_x);                             \
+      sprintf(dbg_strptr, "%" LL "x", dbg_x);                             \
     dbg_strptr += strlen(dbg_strptr);                                    \
   }
 
@@ -364,11 +364,11 @@ void          handle_debug_string(char* s);
     if(trc->get_fnc_name(this, dbg_x, &funcname))                        \
       sprintf(dbg_strptr, "%s", funcname);                               \
     else                                                                 \
-      sprintf(dbg_strptr, "%"LL "x", dbg_x);                             \
+      sprintf(dbg_strptr, "%" LL "x", dbg_x);                             \
     dbg_strptr += strlen(dbg_strptr);                                    \
     if(!bListing)                                                        \
     {                                                                    \
-      sprintf(dbg_strptr, ": (%"LL "x)", state.r[REG_1]);                \
+      sprintf(dbg_strptr, ": (%" LL "x)", state.r[REG_1]);                \
       dbg_strptr += strlen(dbg_strptr);                                  \
     }                                                                    \
   }
@@ -384,11 +384,11 @@ void          handle_debug_string(char* s);
     if(trc->get_fnc_name(this, dbg_x, &funcname))                        \
       sprintf(dbg_strptr, "%s", funcname);                               \
     else                                                                 \
-      sprintf(dbg_strptr, "%"LL "x", dbg_x);                             \
+      sprintf(dbg_strptr, "%" LL "x", dbg_x);                             \
     dbg_strptr += strlen(dbg_strptr);                                    \
     if(!bListing)                                                        \
     {                                                                    \
-      sprintf(dbg_strptr, ": (%"LL "x)", state.f[FREG_1]);               \
+      sprintf(dbg_strptr, ": (%" LL "x)", state.f[FREG_1]);               \
       dbg_strptr += strlen(dbg_strptr);                                  \
     }                                                                    \
   }
@@ -404,7 +404,7 @@ void          handle_debug_string(char* s);
     if(trc->get_fnc_name(this, dbg_x, &funcname))                        \
       sprintf(dbg_strptr, "%s", funcname);                               \
     else                                                                 \
-      sprintf(dbg_strptr, "%"LL "x", dbg_x);                             \
+      sprintf(dbg_strptr, "%" LL "x", dbg_x);                             \
     dbg_strptr += strlen(dbg_strptr);                                    \
   }
 
@@ -424,7 +424,7 @@ void          handle_debug_string(char* s);
     dbg_strptr += strlen(dbg_strptr);                                             \
     if(!bListing)                                                                 \
     {                                                                             \
-      sprintf(dbg_strptr, ": (%"LL "x)", state.r[REG_2]);                         \
+      sprintf(dbg_strptr, ": (%" LL "x)", state.r[REG_2]);                         \
       dbg_strptr += strlen(dbg_strptr);                                           \
     }                                                                             \
   }
@@ -445,7 +445,7 @@ void          handle_debug_string(char* s);
     dbg_strptr += strlen(dbg_strptr);                            \
     if(!bListing)                                                \
     {                                                            \
-      sprintf(dbg_strptr, ": (%"LL "x)", state.r[REG_2]);        \
+      sprintf(dbg_strptr, ": (%" LL "x)", state.r[REG_2]);        \
       dbg_strptr += strlen(dbg_strptr);                          \
     }                                                            \
   }
@@ -491,7 +491,7 @@ void          handle_debug_string(char* s);
     dbg_strptr += strlen(dbg_strptr);                                            \
     if(!bListing)                                                                \
     {                                                                            \
-      sprintf(dbg_strptr, ": (%"LL "x)", state.r[REG_2]);                        \
+      sprintf(dbg_strptr, ": (%" LL "x)", state.r[REG_2]);                        \
       dbg_strptr += strlen(dbg_strptr);                                          \
     }                                                                            \
   }
@@ -513,7 +513,7 @@ void          handle_debug_string(char* s);
     dbg_strptr += strlen(dbg_strptr);                                  \
     if(!bListing)                                                      \
     {                                                                  \
-      sprintf(dbg_strptr, ": (%"LL "x,%"LL "x)", state.r[REG_1], V_2); \
+      sprintf(dbg_strptr, ": (%" LL "x,%" LL "x)", state.r[REG_1], V_2); \
       dbg_strptr += strlen(dbg_strptr);                                \
     }                                                                  \
   }
@@ -531,7 +531,7 @@ void          handle_debug_string(char* s);
     dbg_strptr += strlen(dbg_strptr);                                        \
     if(!bListing)                                                            \
     {                                                                        \
-      sprintf(dbg_strptr, ": (%"LL "x,%"LL "x)", state.f[FREG_1],            \
+      sprintf(dbg_strptr, ": (%" LL "x,%" LL "x)", state.f[FREG_1],            \
               state.f[FREG_2]);                                              \
       dbg_strptr += strlen(dbg_strptr);                                      \
     }                                                                        \
@@ -549,7 +549,7 @@ void          handle_debug_string(char* s);
     dbg_strptr += strlen(dbg_strptr);                                \
     if(!bListing)                                                    \
     {                                                                \
-      sprintf(dbg_strptr, ": (%"LL "x)", state.r[REG_1]);            \
+      sprintf(dbg_strptr, ": (%" LL "x)", state.r[REG_1]);            \
       dbg_strptr += strlen(dbg_strptr);                              \
     }                                                                \
   }
@@ -564,7 +564,7 @@ void          handle_debug_string(char* s);
     dbg_strptr += strlen(dbg_strptr);                                \
     if(!bListing)                                                    \
     {                                                                \
-      sprintf(dbg_strptr, ": (%"LL "x)", state.f[FREG_1]);           \
+      sprintf(dbg_strptr, ": (%" LL "x)", state.f[FREG_1]);           \
       dbg_strptr += strlen(dbg_strptr);                              \
     }                                                                \
   }
@@ -596,7 +596,7 @@ void          handle_debug_string(char* s);
     dbg_strptr += strlen(dbg_strptr);          \
     if(!bListing)                              \
     {                                          \
-      sprintf(dbg_strptr, ": (%"LL "x)", V_2); \
+      sprintf(dbg_strptr, ": (%" LL "x)", V_2); \
       dbg_strptr += strlen(dbg_strptr);        \
     }                                          \
   }
@@ -643,7 +643,7 @@ void          handle_debug_string(char* s);
     dbg_strptr += strlen(dbg_strptr);                                               \
     if(!bListing)                                                                   \
     {                                                                               \
-      sprintf(dbg_strptr, ": (%"LL "x)", state.r[REG_2]);                           \
+      sprintf(dbg_strptr, ": (%" LL "x)", state.r[REG_2]);                           \
       dbg_strptr += strlen(dbg_strptr);                                             \
     }                                                                               \
   }
@@ -667,7 +667,7 @@ void          handle_debug_string(char* s);
     dbg_strptr += strlen(dbg_strptr);                                               \
     if(!bListing)                                                                   \
     {                                                                               \
-      sprintf(dbg_strptr, ": (%"LL "x)", state.r[REG_2]);                           \
+      sprintf(dbg_strptr, ": (%" LL "x)", state.r[REG_2]);                           \
       dbg_strptr += strlen(dbg_strptr);                                             \
     }                                                                               \
   }
@@ -684,7 +684,7 @@ void          handle_debug_string(char* s);
     dbg_strptr += strlen(dbg_strptr);                                        \
     if(!bListing)                                                            \
     {                                                                        \
-      sprintf(dbg_strptr, ": (%"LL "x)", state.r[REG_2]);                    \
+      sprintf(dbg_strptr, ": (%" LL "x)", state.r[REG_2]);                    \
       dbg_strptr += strlen(dbg_strptr);                                      \
     }                                                                        \
   }
@@ -703,7 +703,7 @@ void          handle_debug_string(char* s);
     dbg_strptr += strlen(dbg_strptr);                           \
     if(!bListing)                                               \
     {                                                           \
-      sprintf(dbg_strptr, ": (%"LL "x)", state.f[FREG_2]);      \
+      sprintf(dbg_strptr, ": (%" LL "x)", state.f[FREG_2]);      \
       dbg_strptr += strlen(dbg_strptr);                         \
     }                                                           \
   }
