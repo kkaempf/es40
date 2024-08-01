@@ -309,7 +309,9 @@ void CDEC21143::init()
       while(inum < 1 || inum > i)
       {
         printf("%%NIC-Q-NICNO: Enter the interface number (1-%d):", i);
-        scanf("%d", &inum);
+        if (scanf("%d", &inum) != 1) {
+            fprintf(stderr, "Error reading input\n");
+        }
       }
     }
 
@@ -504,7 +506,7 @@ void CDEC21143::receive_process()
     {
       while(pcap_next_ex(fp, &packet_header, &packet_data) > 0)
       {
-        bool  resl = rx_queue->add_tail(packet_data, packet_header->caplen,
+        rx_queue->add_tail(packet_data, packet_header->caplen,
                                         calc_crc, true);
         state.reg[CSR_SIASTAT / 8] |= SIASTAT_TRA;  //set 10bT activity
       }
@@ -523,7 +525,6 @@ u32 CDEC21143::nic_read(u32 address, int dsize)
 {
   u32 data = 0;
 
-  u32 oldreg = 0;
   int regnr = (int) (address >> 3);
 
   if((address & 7) == 0 && regnr < 32)
@@ -1103,21 +1104,17 @@ int CDEC21143::dec21143_rx()
   static u32&   rdes2 = descr[2];
   static u32&   rdes3 = descr[3];
 
-  u32           addr = state.rx.cur_addr;
-  u32           bufaddr;
+//  u32           bufaddr;
 
   //unsigned char descr[16];
   //u32 rdes0, rdes1, rdes2, rdes3;
-  int           bufsize;
+//  int           bufsize;
 
   //unsigned char descr[16];
   int           buf1_size;
 
   //unsigned char descr[16];
   int           buf2_size;
-
-  //unsigned char descr[16];
-  int           writeback_len = 4;
 
   //unsigned char descr[16];
   int           to_xfer;
@@ -1173,8 +1170,8 @@ int CDEC21143::dec21143_rx()
 
   buf1_size = rdes1 & TDCTL_SIZE1;
   buf2_size = (rdes1 & TDCTL_SIZE2) >> TDCTL_SIZE2_SHIFT;
-  bufaddr = buf1_size ? rdes2 : rdes3;
-  bufsize = buf1_size ? buf1_size : buf2_size;
+//  bufaddr = buf1_size ? rdes2 : rdes3;
+//  bufsize = buf1_size ? buf1_size : buf2_size;
 
   //state.reg[CSR_STATUS/8] &= ~STATUS_RS; // dth: wrong, this is receive state stopped
   //  printf("{ dec21143_rx: base = 0x%08x }\n", (int)addr);
@@ -1406,7 +1403,7 @@ int CDEC21143::dec21143_tx()
 
         // printf("pcap send: %d bytes   \n", state.tx.cur_buf_len);
         if(pcap_sendpacket(fp, state.tx.cur_buf, state.tx.cur_buf_len))
-          printf("Error sending the packet: %s\n", pcap_geterr);
+          printf("Error sending the packet: %s\n", pcap_geterr(fp));
       }
 
       // if in internal or external loopback mode, add packet to read queue
@@ -1423,7 +1420,7 @@ int CDEC21143::dec21143_tx()
         //      printf("%02x-",*aptr++);
         //}
         //printf("|\n");
-        bool  resl = rx_queue->add_tail(state.tx.cur_buf, state.tx.cur_buf_len,
+        rx_queue->add_tail(state.tx.cur_buf, state.tx.cur_buf_len,
                                         calc_crc, crc);
       }
 
@@ -1713,14 +1710,14 @@ int CDEC21143::SaveState(FILE* f)
   long  ss = sizeof(state);
   int   res;
 
-  if(res = CPCIDevice::SaveState(f))
+  if ((res = CPCIDevice::SaveState(f)))
     return res;
 
   fwrite(&nic_magic1, sizeof(u32), 1, f);
   fwrite(&ss, sizeof(long), 1, f);
   fwrite(&state, sizeof(state), 1, f);
   fwrite(&nic_magic2, sizeof(u32), 1, f);
-  printf("%s: %d bytes saved.\n", devid_string, ss);
+  printf("%s: %ld bytes saved.\n", devid_string, ss);
   return 0;
 }
 
@@ -1735,7 +1732,7 @@ int CDEC21143::RestoreState(FILE* f)
   int     res;
   size_t  r;
 
-  if(res = CPCIDevice::RestoreState(f))
+  if ((res = CPCIDevice::RestoreState(f)))
     return res;
 
   r = fread(&m1, sizeof(u32), 1, f);
@@ -1751,7 +1748,7 @@ int CDEC21143::RestoreState(FILE* f)
     return -1;
   }
 
-  fread(&ss, sizeof(long), 1, f);
+  r = fread(&ss, sizeof(long), 1, f);
   if(r != 1)
   {
     printf("%s: unexpected end of file!\n", devid_string);
@@ -1764,7 +1761,7 @@ int CDEC21143::RestoreState(FILE* f)
     return -1;
   }
 
-  fread(&state, sizeof(state), 1, f);
+  r = fread(&state, sizeof(state), 1, f);
   if(r != 1)
   {
     printf("%s: unexpected end of file!\n", devid_string);
@@ -1784,7 +1781,7 @@ int CDEC21143::RestoreState(FILE* f)
     return -1;
   }
 
-  printf("%s: %d bytes restored.\n", devid_string, ss);
+  printf("%s: %ld bytes restored.\n", devid_string, ss);
   return 0;
 }
 #endif //defined(HAVE_PCAP)

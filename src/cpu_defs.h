@@ -465,7 +465,7 @@ inline u64 fsqrt64(u64 asig, s32 exp)
 #define DISP_21   (sext_u64_21(ins))
 
 #define DATA_PHYS_NT(addr, flags)                      \
-  if(virt2phys(addr, &phys_address, flags, NULL, ins)) \
+  if(virt2phys((addr), &phys_address, flags, NULL, ins)) \
     return;
 
 #define ALIGN_PHYS(a)                 (phys_address &~((u64) ((a) - 1)))
@@ -475,10 +475,10 @@ inline u64 fsqrt64(u64 asig, s32 exp)
   {                                                                              \
     u64 a1 = (addr);                                                             \
     u64 a2 = (addr) + (align);                                                   \
-    if((a1 ^ a2) &~U64(0x1fff))  /*page boundary crossed*/                       \
+    if((a1 ^ a2) & (~U64(0x1fff)))  /*page boundary crossed*/                    \
       pbc = true;                                                                \
   }                                                                              \
-  if(virt2phys(addr, &phys_address, flags, NULL, ins))                           \
+  if(virt2phys((addr), &phys_address, flags, NULL, ins))                         \
     return;
 
 /**
@@ -506,7 +506,7 @@ inline u64 fsqrt64(u64 asig, s32 exp)
   if (pbc) {                                            \
     dest = 0;                                           \
     for (int ii=0; ii<(size/8); ii++) {                 \
-      DATA_PHYS(va+ii, ACCESS_READ,0);                  \
+      DATA_PHYS((va)+ii, ACCESS_READ,0);                \
       dest |= (cSystem->ReadMem(phys_address, 8, this) << (ii*8));  \
     }                                                   \
   } else {                                              \
@@ -521,7 +521,7 @@ inline u64 fsqrt64(u64 asig, s32 exp)
   if (pbc) {                                            \
     dest = 0;                                           \
     for (int ii=0; ii<(size/8); ii++) {                 \
-      DATA_PHYS(va+ii, ACCESS_READ,0);                  \
+      DATA_PHYS((va)+ii, ACCESS_READ,0);                \
       dest |= (cSystem->ReadMem(phys_address, 8, this) << (ii*8));  \
     }                                                   \
   } else {                                              \
@@ -535,7 +535,7 @@ inline u64 fsqrt64(u64 asig, s32 exp)
   if (pbc) {                                              \
     u64 aa = 0;                                           \
     for (int ii=0; ii<(size/8); ii++) {                   \
-      DATA_PHYS(va+ii, ACCESS_READ,0);                    \
+      DATA_PHYS((va)+ii, ACCESS_READ,0);                  \
       aa |= (cSystem->ReadMem(phys_address, 8, this) << (ii*8));  \
     }                                                     \
     dest = f(aa);                                         \
@@ -551,7 +551,7 @@ inline u64 fsqrt64(u64 asig, s32 exp)
   if (pbc) {                                              \
     u64 aa = 0;                                           \
     for (int ii=0; ii<(size/8); ii++) {                   \
-      DATA_PHYS(va+ii, ACCESS_READ,0);                    \
+      DATA_PHYS((va)+ii, ACCESS_READ,0);                  \
       aa |= (cSystem->ReadMem(phys_address, 8, this) << (ii*8));  \
     }                                                     \
     dest = f(aa);                                         \
@@ -576,7 +576,7 @@ inline u64 fsqrt64(u64 asig, s32 exp)
   if (pbc) {                                          \
     u64 aa = src;                                     \
     for (int ii=0; ii<(size/8); ii++) {               \
-      DATA_PHYS(va+ii, ACCESS_WRITE, 0);              \
+      DATA_PHYS((va)+ii, ACCESS_WRITE, 0);            \
       cSystem->WriteMem(phys_address, 8, aa, this);   \
       aa >>= 8;                                       \
     }                                                 \

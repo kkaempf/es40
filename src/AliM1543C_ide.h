@@ -375,6 +375,7 @@ class CAliM1543C_ide : public CPCIDevice,
 #define REG_COMMAND_STATUS        7
 #define REG_COMMAND_COMMAND       7
 
+/* unused
 static const char*  register_names[] = {
   "DATA",
   "ERROR/FEATURES",
@@ -385,6 +386,7 @@ static const char*  register_names[] = {
   "DRIVE",
   "STATUS/COMMAND",
 };
+*/
 
 /* misc constants */
 
@@ -398,7 +400,7 @@ static const char*  register_names[] = {
 #define IR_IO       0x02
 #define IR_REL      0x04
 
-/* Packet protocol states */
+/* Packet protocol states
 static const char*  packet_states[] = {
   "DP0: Prepare A",
   "DP1: Receive Packet",
@@ -406,7 +408,7 @@ static const char*  packet_states[] = {
   "DP3/4: Ready INITRQ/Transfer Data",
   "DIx: Device Interrupt ",
 };
-
+ */
 #define PACKET_NONE 0
 #define PACKET_DP0  0
 #define PACKET_DP1  1

@@ -110,4 +110,4 @@
 
 #define DO_STQ_U  WRITE_VIRT((state.r[REG_2] + DISP_16) & ~U64(0x07), 64, state.r[REG_1]);
   
-#define DO_STW    WRITE_VIRT(state.r[REG_2] + DISP_16, 16, state.r[REG_1]);
+#define DO_STW    WRITE_VIRT((state.r[REG_2] + DISP_16), 16, state.r[REG_1]);

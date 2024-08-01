@@ -1178,7 +1178,7 @@ void CAliM1543C::pic_deassert(int index, int intno)
     return;
 
   //  printf("De-asserting %d,%d\n",index,intno);
-  state.pic_asserted[index] &= !(1 << intno);
+  state.pic_asserted[index] &= ~(1 << intno);
   if(index == 1 && state.pic_asserted[1] == 0)
     pic_deassert(0, 2); // cascade
   if(index == 0 && state.pic_asserted[0] == 0)
@@ -1196,7 +1196,7 @@ int CAliM1543C::SaveState(FILE* f)
   long  ss = sizeof(state);
   int   res;
 
-  if(res = CPCIDevice::SaveState(f))
+  if ((res = CPCIDevice::SaveState(f)))
     return res;
 
   fwrite(&ali_magic1, sizeof(u32), 1, f);
@@ -1218,7 +1218,7 @@ int CAliM1543C::RestoreState(FILE* f)
   int     res;
   size_t  r;
 
-  if(res = CPCIDevice::RestoreState(f))
+  if ((res = CPCIDevice::RestoreState(f)))
     return res;
 
   r = fread(&m1, sizeof(u32), 1, f);
@@ -1234,7 +1234,7 @@ int CAliM1543C::RestoreState(FILE* f)
     return -1;
   }
 
-  fread(&ss, sizeof(long), 1, f);
+  r = fread(&ss, sizeof(long), 1, f);
   if(r != 1)
   {
     printf("%s: unexpected end of file!\n", devid_string);
@@ -1247,7 +1247,7 @@ int CAliM1543C::RestoreState(FILE* f)
     return -1;
   }
 
-  fread(&state, sizeof(state), 1, f);
+  r = fread(&state, sizeof(state), 1, f);
   if(r != 1)
   {
     printf("%s: unexpected end of file!\n", devid_string);

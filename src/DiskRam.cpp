@@ -98,7 +98,7 @@ CDiskRam::CDiskRam(CConfigurator*  cfg, CSystem*  sys, CDiskController*  c,
 
   model_number = myCfg->get_text_value("model_number", "ES40RAMDISK");
 
-  printf("%s: Mounted RAMDISK, %" LL "d %d-byte blocks, %" LL "d/%d/%d.\n",
+  printf("%s: Mounted RAMDISK, %ld %ld-byte blocks, %ld/%ld/%ld.\n",
          devid_string, byte_size / state.block_size, state.block_size,
          cylinders, heads, sectors);
 }
@@ -129,7 +129,7 @@ size_t CDiskRam::read_bytes(void* dest, size_t bytes)
   if(state.byte_pos >= byte_size)
     return 0;
 
-  while(state.byte_pos + bytes >= byte_size)
+  while (off64_t(state.byte_pos + bytes) >= byte_size)
     bytes--;
 
   memcpy(dest, &(((char*) ramdisk)[state.byte_pos]), bytes);
@@ -142,7 +142,7 @@ size_t CDiskRam::write_bytes(void* src, size_t bytes)
   if(state.byte_pos >= byte_size)
     return 0;
 
-  while(state.byte_pos + bytes >= byte_size)
+  while (off64_t(state.byte_pos + bytes) >= byte_size)
     bytes--;
 
   memcpy(&(((char*) ramdisk)[state.byte_pos]), src, bytes);

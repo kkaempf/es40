@@ -262,8 +262,6 @@ void CCirrus::init()
   // Register PCI device
   add_function(0, cirrus_cfg_data, cirrus_cfg_mask);
 
-  int i;
-
   // Initialize all state variables to 0
   memset((void*) &state, 0, sizeof(state));
 
@@ -532,7 +530,7 @@ int CCirrus::SaveState(FILE* f)
   long  ss = sizeof(state);
   int   res;
 
-  if(res = CPCIDevice::SaveState(f))
+  if ((res = CPCIDevice::SaveState(f)))
     return res;
 
   fwrite(&cirrus_magic1, sizeof(u32), 1, f);
@@ -554,7 +552,7 @@ int CCirrus::RestoreState(FILE* f)
   int     res;
   size_t  r;
 
-  if(res = CPCIDevice::RestoreState(f))
+  if ((res = CPCIDevice::RestoreState(f)))
     return res;
 
   r = fread(&m1, sizeof(u32), 1, f);
@@ -570,7 +568,7 @@ int CCirrus::RestoreState(FILE* f)
     return -1;
   }
 
-  fread(&ss, sizeof(long), 1, f);
+  r = fread(&ss, sizeof(long), 1, f);
   if(r != 1)
   {
     printf("%s: unexpected end of file!\n", devid_string);
@@ -583,7 +581,7 @@ int CCirrus::RestoreState(FILE* f)
     return -1;
   }
 
-  fread(&state, sizeof(state), 1, f);
+  r = fread(&state, sizeof(state), 1, f);
   if(r != 1)
   {
     printf("%s: unexpected end of file!\n", devid_string);
@@ -707,7 +705,7 @@ u32 CCirrus::rom_read(u32 address, int dsize)
   }
   else
   {
-    printf("cirrus: (BAD) rom read: %" LL "x, %d, %" LL "x\n", address, dsize,
+    printf("cirrus: (BAD) rom read: %x, %d, %x\n", address, dsize,
            data);
   }
 
@@ -1822,7 +1820,9 @@ void CCirrus::write_b_3cf(u8 value)
 {
   u8    prev_memory_mapping;
   bool  prev_graphics_alpha;
+#if defined(DEBUG_VGA)
   bool  prev_chain_odd_even;
+#endif
 
   /* Graphics Controller Registers 00..08 */
   switch(state.graphics_ctrl.index)
@@ -1869,7 +1869,9 @@ void CCirrus::write_b_3cf(u8 value)
 
   case 6:     /* Miscellaneous */
     prev_graphics_alpha = state.graphics_ctrl.graphics_alpha;
+#if defined(DEBUG_VGA)
     prev_chain_odd_even = state.graphics_ctrl.chain_odd_even;
+#endif
     prev_memory_mapping = state.graphics_ctrl.memory_mapping;
 
     state.graphics_ctrl.graphics_alpha = value & 0x01;

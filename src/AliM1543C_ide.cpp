@@ -443,14 +443,14 @@ int CAliM1543C_ide::SaveState(FILE* f)
   long  ss = sizeof(state);
   int   res;
 
-  if(res = CPCIDevice::SaveState(f))
+  if ((res = CPCIDevice::SaveState(f)))
     return res;
 
   fwrite(&ide_magic1, sizeof(u32), 1, f);
   fwrite(&ss, sizeof(long), 1, f);
   fwrite(&state, sizeof(state), 1, f);
   fwrite(&ide_magic2, sizeof(u32), 1, f);
-  printf("%s: %d bytes saved.\n", devid_string, (int) ss);
+  printf("%s: %ld bytes saved.\n", devid_string, ss);
   return 0;
 }
 
@@ -465,7 +465,7 @@ int CAliM1543C_ide::RestoreState(FILE* f)
   int     res;
   size_t  r;
 
-  if(res = CPCIDevice::RestoreState(f))
+  if ((res = CPCIDevice::RestoreState(f)))
     return res;
 
   r = fread(&m1, sizeof(u32), 1, f);
@@ -481,7 +481,7 @@ int CAliM1543C_ide::RestoreState(FILE* f)
     return -1;
   }
 
-  fread(&ss, sizeof(long), 1, f);
+  r = fread(&ss, sizeof(long), 1, f);
   if(r != 1)
   {
     printf("%s: unexpected end of file!\n", devid_string);
@@ -494,7 +494,7 @@ int CAliM1543C_ide::RestoreState(FILE* f)
     return -1;
   }
 
-  fread(&state, sizeof(state), 1, f);
+  r = fread(&state, sizeof(state), 1, f);
   if(r != 1)
   {
     printf("%s: unexpected end of file!\n", devid_string);
@@ -832,7 +832,7 @@ void CAliM1543C_ide::ide_command_write(int index, u32 address, int dsize,
     break;
 
   case REG_COMMAND_DRIVE:
-    if(((data >> 4) & 1) != CONTROLLER(index).selected)
+    if(((data >> 4) & 1) != (u32)CONTROLLER(index).selected)
 #ifdef DEBUG_IDE
       printf("Setting selected device on %d to: %d.  val=%02x\n", index,
              (data >> 4) & 1, data);
@@ -1043,9 +1043,8 @@ void CAliM1543C_ide::ide_busmaster_write(int index, u32 address, u32 data,
     printf("%%IDE-I-WRITBUSM: write port %d on IDE bus master %d: 0x%02x, %d bytes\n",
          (u32) (address), index, data, dsize / 8);
   }
-#endif
-
   u32 prd_address;
+#endif
 
   //  u32 base, control;
   switch(dsize)
@@ -1113,8 +1112,8 @@ void CAliM1543C_ide::ide_busmaster_write(int index, u32 address, u32 data,
 
   case 7:
     CONTROLLER(index).busmaster[address] = data;
-    prd_address = endian_32(*(u32 *) (&CONTROLLER(index).busmaster[4]));
 #ifdef DEBUG_IDE_BUSMASTER
+    prd_address = endian_32(*(u32 *) (&CONTROLLER(index).busmaster[4]));
     printf("%%IDE-I-PRD: Virtual address: %"LL "x  \n",
            endian_32(*(u32 *) (&CONTROLLER(index).busmaster[4])));
     printf("-IDE-I-PRD: Physical address: %"LL "x  \n", prd_address);
@@ -1926,7 +1925,7 @@ void CAliM1543C_ide::execute(int index)
                 printf("Sending ATAPI data back via DMA.\n");
 #endif
 
-                u8  status = do_dma_transfer(index,
+                do_dma_transfer(index,
                                              (u8 *) (&CONTROLLER(index).data[0]),
                                                    SEL_REGISTERS(index).BYTE_COUNT,
                                                      false);
@@ -2323,7 +2322,7 @@ void CAliM1543C_ide::execute(int index)
                                      SEL_REGISTERS(index).sector_count);
 
         u8*   ptr = (u8 *) (&CONTROLLER(index).data[0]);
-        u8    status = do_dma_transfer(index, ptr,
+        do_dma_transfer(index, ptr,
                                        SEL_REGISTERS(index).sector_count * 512,
                                        false);
         SEL_COMMAND(index).command_in_progress = false;
@@ -2363,7 +2362,7 @@ void CAliM1543C_ide::execute(int index)
 #endif
 
           u8*   ptr = (u8 *) (&CONTROLLER(index).data[0]);
-          u8    status = do_dma_transfer(index, ptr,
+          do_dma_transfer(index, ptr,
                                          SEL_REGISTERS(index).sector_count * 512,
                                            true);
           u32   lba = (SEL_REGISTERS(index).head_no << 24) |

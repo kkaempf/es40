@@ -590,8 +590,6 @@ void CAlphaCPU::execute()
   u64 temp_64;
   u64 temp_64_1;
   u64 temp_64_2;
-  UFP ufp1;
-  UFP ufp2;
 
   bool pbc;
 
@@ -1411,7 +1409,7 @@ int CAlphaCPU::RestoreState(FILE* f)
     return -1;
   }
 
-  fread(&ss, sizeof(long), 1, f);
+  r = fread(&ss, sizeof(long), 1, f);
   if(r != 1)
   {
     printf("%s: unexpected end of file!\n", devid_string);
@@ -1424,7 +1422,7 @@ int CAlphaCPU::RestoreState(FILE* f)
     return -1;
   }
 
-  fread(&state, sizeof(state), 1, f);
+  r = fread(&state, sizeof(state), 1, f);
   if(r != 1)
   {
     printf("%s: unexpected end of file!\n", devid_string);
@@ -1546,7 +1544,7 @@ int CAlphaCPU::virt2phys(u64 virt, u64* phys, int flags, bool* asm_bit, u32 ins)
   int   res;
 
   int   spe = (flags & ACCESS_EXEC) ? state.i_ctl_spe : state.m_ctl_spe;
-  int   asn = (flags & ACCESS_EXEC) ? state.asn : state.asn0;
+//  int   asn = (flags & ACCESS_EXEC) ? state.asn : state.asn0;
   int   cm = (flags & ALT) ? state.alt_cm : state.cm;
   bool  forreal = !(flags & FAKE);
 
@@ -1685,7 +1683,7 @@ int CAlphaCPU::virt2phys(u64 virt, u64* phys, int flags, bool* asm_bit, u32 ins)
 
         // try to handle the double miss. If this needs to transfer control
         // to the OS, it will return non-zero value.
-        if(res = vmspal_ent_dtbm_double_3(flags))
+        if ((res = vmspal_ent_dtbm_double_3(flags)))
           return res;
 
         // Double miss succesfully handled. Try to get the physical address again.
@@ -1696,7 +1694,7 @@ int CAlphaCPU::virt2phys(u64 virt, u64* phys, int flags, bool* asm_bit, u32 ins)
 
         // try to handle the ITB miss. If this needs to transfer control
         // to the OS, it will return non-zero value.
-        if(res = vmspal_ent_itbm(flags))
+        if ((res = vmspal_ent_itbm(flags)))
           return res;
 
         // ITB miss succesfully handled. Try to get the physical address again.
@@ -1718,7 +1716,7 @@ int CAlphaCPU::virt2phys(u64 virt, u64* phys, int flags, bool* asm_bit, u32 ins)
 
         // try to handle the single miss. If this needs to transfer control
         // to the OS, it will return non-zero value.
-        if(res = vmspal_ent_dtbm_single(flags))
+        if ((res = vmspal_ent_dtbm_single(flags)))
           return res;
 
         // Single miss succesfully handled. Try to get the physical address again.
@@ -1759,7 +1757,7 @@ int CAlphaCPU::virt2phys(u64 virt, u64* phys, int flags, bool* asm_bit, u32 ins)
         state.exc_sum = 0;
         if(state.pal_vms)
         {
-          if(res = vmspal_ent_iacv(flags))
+          if ((res = vmspal_ent_iacv(flags)))
             return res;
         }
         else
@@ -1787,7 +1785,7 @@ int CAlphaCPU::virt2phys(u64 virt, u64* phys, int flags, bool* asm_bit, u32 ins)
           2;
         if(state.pal_vms)
         {
-          if(res = vmspal_ent_dfault(flags))
+          if ((res = vmspal_ent_dfault(flags)))
             return res;
         }
         else
@@ -1816,7 +1814,7 @@ int CAlphaCPU::virt2phys(u64 virt, u64* phys, int flags, bool* asm_bit, u32 ins)
         state.exc_sum = 0;
         if(state.pal_vms)
         {
-          if(res = vmspal_ent_iacv(flags))
+          if ((res = vmspal_ent_iacv(flags)))
             return res;
         }
         else
@@ -1844,7 +1842,7 @@ int CAlphaCPU::virt2phys(u64 virt, u64* phys, int flags, bool* asm_bit, u32 ins)
           ((flags & ACCESS_WRITE) ? 8 : 4);
         if(state.pal_vms)
         {
-          if(res = vmspal_ent_dfault(flags))
+          if ((res = vmspal_ent_dfault(flags)))
             return res;
         }
         else

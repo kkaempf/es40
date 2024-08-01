@@ -305,7 +305,7 @@
 #define DO_CPYSN    FPSTART;                      \
   state.f[FREG_3] =                               \
     (                                             \
-      state.f[FREG_1] & U64(0x8000000000000000) ^ \
+      (state.f[FREG_1] & U64(0x8000000000000000)) ^ \
       U64(0x8000000000000000)                     \
     ) |                                           \
     (state.f[FREG_2] & U64(0x7fffffffffffffff));

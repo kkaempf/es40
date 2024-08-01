@@ -94,13 +94,13 @@
     u64 rav = RAV;                                                              \
     u64 rbv = RBV;                                                              \
     RCV = rav + rbv;                                                            \
-                                                                             \
+                                                                                \
     /* test for integer overflow */                                             \
     if(((~rav ^ rbv) & (rav ^ RCV)) & Q_SIGN)                                   \
     {                                                                           \
       ARITH_TRAP_I(TRAP_IOV, RC);                                               \
-      printf("ADDQ_V %016" LL "x + %016" LL "x = %016" LL "x + TRAP.\n", rav, rbv, \
-             RCV);                                                              \
+      printf("ADDQ_V %016" LL "x + %016" LL "x = %016" LL "x + TRAP.\n", (long long unsigned int)(rav), (long long unsigned int)(rbv), \
+             (long long unsigned int)(RCV));                                    \
     }                                                                           \
   }
 
@@ -113,13 +113,13 @@
     u64 rav = RAV;                                                              \
     u64 rbv = RBV;                                                              \
     RCV = sext_u64_32(rav + rbv);                                               \
-                                                                             \
+                                                                                \
     /* test for integer overflow */                                             \
     if(((~rav ^ rbv) & (rav ^ RCV)) & L_SIGN)                                   \
     {                                                                           \
       ARITH_TRAP_I(TRAP_IOV, RC);                                               \
-      printf("ADDL_V %016" LL "x + %016" LL "x = %016" LL "x + TRAP.\n", rav, rbv, \
-             RCV);                                                              \
+      printf("ADDL_V %016" LL "x + %016" LL "x = %016" LL "x + TRAP.\n", (long long unsigned int)(rav), (long long unsigned int)(rbv), \
+             (long long unsigned int)(RCV));                                    \
     }                                                                           \
   }
 
@@ -163,8 +163,8 @@
     if((RCV ^ sr) & U64(0xffffffff00000000))                                    \
     {                                                                           \
       ARITH_TRAP_I(TRAP_IOV, RC);                                               \
-      printf("MULL_V %016" LL "x * %016" LL "x = %016" LL "x + TRAP.\n", rav, rbv, \
-             RCV);                                                              \
+      printf("MULL_V %016" LL "x * %016" LL "x = %016" LL "x + TRAP.\n", (long long unsigned int)(rav), (long long unsigned int)(rbv), \
+             (long long unsigned int)(RCV));                                    \
     }                                                                           \
   }
 
@@ -183,8 +183,8 @@
     if(Q_GETSIGN(RCV) ? (t64 != X64_QUAD) : (t64 != 0))                         \
     {                                                                           \
       ARITH_TRAP_I(TRAP_IOV, RC);                                               \
-      printf("MULQ_V %016" LL "x * %016" LL "x = %016" LL "x + TRAP.\n", rav, rbv, \
-             RCV);                                                              \
+      printf("MULQ_V %016" LL "x * %016" LL "x = %016" LL "x + TRAP.\n", (long long unsigned int)(rav), (long long unsigned int)(rbv), \
+             (long long unsigned int)(RCV));                                    \
     }                                                                           \
   }
 
@@ -200,13 +200,13 @@
     u64 rav = RAV;                                                              \
     u64 rbv = RBV;                                                              \
     RCV = rav - rbv;                                                            \
-                                                                             \
+                                                                                \
     /* test for integer overflow */                                             \
     if(((rav ^ rbv) & (rav ^ RCV)) & Q_SIGN)                                    \
     {                                                                           \
       ARITH_TRAP_I(TRAP_IOV, RC);                                               \
-      printf("SUBQ_V %016" LL "x - %016" LL "x = %016" LL "x + TRAP.\n", rav, rbv, \
-             RCV);                                                              \
+      printf("SUBQ_V %016" LL "x - %016" LL "x = %016" LL "x + TRAP.\n", (long long unsigned int)(rav), (long long unsigned int)(rbv), \
+             (long long unsigned int)(RCV));                                    \
     }                                                                           \
   }
 
@@ -219,12 +219,12 @@
     u64 rav = RAV;                                                              \
     u64 rbv = RBV;                                                              \
     RCV = sext_u64_32(rav - rbv);                                               \
-                                                                             \
+                                                                                \
     /* test for integer overflow */                                             \
     if(((rav ^ rbv) & (rav ^ RCV)) & L_SIGN)                                    \
     {                                                                           \
       ARITH_TRAP_I(TRAP_IOV, RC);                                               \
-      printf("SUBL_V %016" LL "x - %016" LL "x = %016" LL "x + TRAP.\n", rav, rbv, \
-             RCV);                                                              \
+      printf("SUBL_V %016" LL "x - %016" LL "x = %016" LL "x + TRAP.\n", (long long unsigned int)(rav), (long long unsigned int)(rbv), \
+             (long long unsigned int)(RCV));                                    \
     }                                                                           \
   }
